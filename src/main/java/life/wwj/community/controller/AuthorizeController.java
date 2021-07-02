@@ -6,9 +6,13 @@ import life.wwj.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author wwj
  * @create 2021-05-20-14:40
@@ -23,9 +27,11 @@ public class AuthorizeController {
     private String client_secret;
     @Value("${github.redirect.uri}")
     private String redirect_uri;
+
     @GetMapping("/callback")
-    public String callback(@RequestParam(value = "code")String code,
-                           @RequestParam(value = "state")String state){
+    public String callback(@RequestParam(value = "code") String code,
+                           @RequestParam(value = "state") String state,
+                           HttpServletRequest request) {
         System.out.println("callback is running");
         System.out.println(client_secret);
         System.out.println(client_id);
@@ -39,11 +45,11 @@ public class AuthorizeController {
         String token = githubProvider.getaccessToken(accessTokenDTO);
         GitHubUserDTO user = githubProvider.getUser(token);
         System.out.println(user.getName());
-        return "index";
-    }
-    @ResponseBody
-    @GetMapping("/call")
-    public String call(){
-        return "call is runing";
+        if (user != null) {
+            request.getSession().setAttribute("user", user);
+            return "redirect:/";
+        } else {
+            return "redirect:/";
+        }
     }
 }
