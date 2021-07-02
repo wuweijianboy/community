@@ -2,16 +2,16 @@ package life.wwj.community.controller;
 
 import life.wwj.community.dto.AccessTokenDTO;
 import life.wwj.community.dto.GitHubUserDTO;
+import life.wwj.community.mapper.UserMapper;
+import life.wwj.community.model.User;
 import life.wwj.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 /**
  * @author wwj
@@ -28,6 +28,9 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirect_uri;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(value = "code") String code,
                            @RequestParam(value = "state") String state,
@@ -43,10 +46,17 @@ public class AuthorizeController {
         accessTokenDTO.setClient_secret(client_secret);
         accessTokenDTO.setRedirect_uri(redirect_uri);
         String token = githubProvider.getaccessToken(accessTokenDTO);
-        GitHubUserDTO user = githubProvider.getUser(token);
-        System.out.println(user.getName());
-        if (user != null) {
-            request.getSession().setAttribute("user", user);
+        GitHubUserDTO gituser = githubProvider.getUser(token);
+        System.out.println(gituser.getName());
+        if (gituser != null) {
+            User user = new User();
+            user.setAccount_id(String.valueOf(gituser.getId()));
+            user.setName(gituser.getName());
+            user.setToken(UUID.randomUUID().toString());
+            user.setGmt_create(System.currentTimeMillis());
+            user.setGmt_modified(user.getGmt_create());
+            userMapper.insertUser(user);
+            request.getSession().setAttribute("user", gituser);
             return "redirect:/";
         } else {
             return "redirect:/";
