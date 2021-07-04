@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public class AuthorizeController {
         String token = githubProvider.getaccessToken(accessTokenDTO);
         GitHubUserDTO gituser = githubProvider.getUser(token);
         System.out.println(gituser.getName());
-        if (gituser != null) {
+        if (gituser != null && gituser.getName() != null) {
             User user = new User();
             user.setAccount_id(String.valueOf(gituser.getId()));
             user.setName(gituser.getName());
@@ -59,11 +60,12 @@ public class AuthorizeController {
             user.setGmt_create(System.currentTimeMillis());
             user.setGmt_modified(user.getGmt_create());
             userMapper.insertUser(user);
-            System.err.println("token"+token1);
+            System.err.println("token" + token1);
             Cookie cookie = new Cookie("token", token1);
             response.addCookie(cookie);
             return "redirect:/";
         } else {
+            System.err.println("授权登录GitHub失败！");
             return "redirect:/";
         }
     }
