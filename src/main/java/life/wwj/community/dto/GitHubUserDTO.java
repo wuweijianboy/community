@@ -1,35 +1,15 @@
 package life.wwj.community.dto;
 
+import lombok.Data;
+
 /**
  * @author wwj
  * @create 2021-05-20-16:50
  */
+@Data
 public class GitHubUserDTO {
     private Long id;
     private String name;
     private String bio;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
+    private String avatar_url;
 }
