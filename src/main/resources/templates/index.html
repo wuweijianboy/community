@@ -5,6 +5,7 @@
     <title>社区</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 </head>
 <body>
@@ -47,5 +48,76 @@
         </div>
     </div>
 </nav>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> 发现</h2>
+            <hr>
+            <div class="media" th:each="list : ${lists}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object icon" th:src="${list.users.avatar_url}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${list.title}"></h4>
+                    <p th:text="${list.descraption}"></p>
+                    <p class="content_message"><span>20</span> 个回复 • <span>20</span> 次浏览 • <span
+                            th:text="${#dates.format(list.getGmt_create(),'yyyy-MM-dd HH:mm')}"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>热门标签</h3>
+        </div>
+    </div>
+    <nav aria-label="Page pagination-lg">
+        <ul class="pagination page">
+            <li>
+                <a th:href="@{'?page='+${pageInfo.prePage}}" aria-label="Previous">
+                    <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+                <a th:href="@{'?page='+${pageInfo.nextPage}}" aria-label="Next">
+                    <span aria-hidden="true">下一页</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+<!--    <div class="page">-->
+<!--        <th:block th:if="${pageinfo.pageNum==1}">-->
+<!--            <span class="last">上一页</span>-->
+<!--        </th:block>-->
+<!--        <th:block th:if="${pageinfo.pageNum>1}">-->
+<!--            <a th:href="@{'?='+page=${pageinfo.pageNum-1})}">-->
+<!--                <span class="last">上一页</span></a>-->
+<!--        </th:block>-->
+<!--        &lt;!&ndash;        页码遍历&ndash;&gt;-->
+<!--        <th:block th:each="i :${#numbers.sequence(1, pageinfo.pages)}">-->
+<!--            <a th:href="@{'?='+pageinfo.ageNum=${i}}">-->
+<!--                &lt;!&ndash;                当前页样式为on&ndash;&gt;-->
+<!--                <span th:class="${pageinfo.pageNum == i}? 'on' :''">-->
+<!--                <th:block th:text="${i}"></th:block>-->
+<!--            </span>-->
+<!--            </a>-->
+<!--        </th:block>-->
+<!--        &lt;!&ndash;下一页&ndash;&gt;-->
+<!--        &lt;!&ndash;        如果为最后一页也没有a标签&ndash;&gt;-->
+<!--        <th:block th:if="${pageinfo.pageNum==pageinfo.pages}">-->
+<!--            <span class="next">下一页</span>-->
+<!--        </th:block>-->
+<!--        <th:block th:if="${pageinfo.pageNum<pageinfo.pages}">-->
+<!--            <a th:href="@{'?='+pageinfo.pageNum=${pageinfo.pageNum+1}}">-->
+<!--                <span class="next">下一页</span>-->
+<!--            </a>-->
+<!--        </th:block>-->
+<!--    </div>-->
+</div>
 </body>
 </html>

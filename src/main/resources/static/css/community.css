@@ -10,3 +10,17 @@ body{
     float: right;
     margin-bottom: 15px;
 }
+
+.icon{
+    height: 38px;
+    width: 38px;
+}
+.content_message{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+.page{
+    float: right;
+}
+
