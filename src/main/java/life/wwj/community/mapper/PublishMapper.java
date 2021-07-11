@@ -18,4 +18,7 @@ public interface PublishMapper {
 
     @Select("select * from publish")
     List<Publish> selectAll();
+
+    @Select("select count(*) from publish")
+    int count();
 }

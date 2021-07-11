@@ -3,7 +3,6 @@ package life.wwj.community.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import life.wwj.community.dto.PublishDTO;
-import life.wwj.community.mapper.PublishMapper;
 import life.wwj.community.mapper.UserMapper;
 import life.wwj.community.model.User;
 import life.wwj.community.service.PublishService;
@@ -28,11 +27,13 @@ public class IndexController {
     private UserMapper userMapper;
     @Autowired
     private PublishService publishService;
+    List<PublishDTO> lists = null;
+    private int size = 3;
 
     @GetMapping("/")
     public String index(HttpServletRequest request,
                         Model model,
-                        @RequestParam(required = true, defaultValue = "1", value = "page") Integer page
+                        @RequestParam(required = true, defaultValue = "1", name = "page") Integer page
     ) {
 
         Cookie[] cookies = request.getCookies();
@@ -48,15 +49,14 @@ public class IndexController {
                     break;
                 }
             }
-            PageHelper.startPage(page, 3);
-            List<PublishDTO> lists = publishService.list();
+            PageHelper.startPage(page, size);
+            lists = publishService.list();
             PageInfo<PublishDTO> pageInfo = new PageInfo<>(lists);
-//            System.out.println("page:" + page);
             System.out.println(pageInfo);
-//            System.out.println(lists);
-//            System.out.println("当前页码：" + pageInfo.getPageNum());
+            pageInfo.setPages(publishService.listCount(size));
             pageInfo.setNextPage(page + 1);
             pageInfo.setPrePage(page - 1);
+            pageInfo.setPageNum(page);
             System.out.println("下一页页码：" + (page + 1));
             model.addAttribute("lists", lists);
             model.addAttribute("pageInfo", pageInfo);
